@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Strength Checker</title>
+    <style>
+      
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans&display=swap');
+        body {
+            font-family: google sans;
+            background-color: #0e1221;
+            color: #eee;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #444;
+            padding: 20px;
+          width:70%;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+          box-sizing:border-box;
+            margin: 10px 0;
+            border: 1px solid #555;
+            border-radius: 5px;
+            background-color: #222;
+            color: #eee;
+        }
+
+        #strength-bar {
+            height: 10px;
+            width: 100%;
+            border-radius: 5px;
+            margin: 10px 0;
+            background-color: #666; 
+        }
+
+        #feedback {
+            font-size: 14px;
+            margin-top: 10px;
+            color: #ddd;
+        }
+    </style>
+</head>
+<body>
+  <div style="width:100%;padding:10px;box-sizing:border-box;background-color:#000000;border-radius:0 0 10px 10px;margin-bottom:20px;color:#ffffff;" onclick="window.open('/index.html','_self')"> <img src="https://cdn.glitch.global/df0b4a7c-1319-4c25-a69f-aaaeacc05be7/back%20(1).png?v=1723464891817" width="20px"> Back Home</div>
+  <div style="display:flex;justify-content:center">
+  <div class="container">
+        <h2>Password Strength Checker</h2>
+        <input type="password" id="password" placeholder="Enter your password">
+        <div id="strength-bar"></div>
+        <p id="feedback"></p>
+    </div>
+  </div>
+    <script>
+        const password = document.getElementById('password');
+        const strengthBar = document.getElementById('strength-bar');
+        const feedback = document.getElementById('feedback');
+
+        password.addEventListener('input', () => {
+            const passValue = password.value;
+            let strength = 0;
+
+            if (passValue.length >= 8) strength++;
+            if (passValue.match(/[a-z]/)) strength++;
+            if (passValue.match(/[A-Z]/)) strength++;
+            if (passValue.match(/[0-9]/)) strength++;
+            if (passValue.match(/[@$!%*?&#]/)) strength++;
+
+            if (passValue.length >= 12 && passValue.match(/[a-z]/) && passValue.match(/[A-Z]/) && passValue.match(/[0-9]/) && passValue.match(/[@$!%*?&#]/)) {
+                strength = 6; 
+            }
+
+            switch (strength) {
+                case 1:
+                case 2:
+                    strengthBar.style="background-color:red";
+                    feedback.innerText = 'Weak: Try adding more characters, uppercase letters, numbers, or special symbols.';
+                    break;
+                case 3:
+                case 4:
+                    strengthBar.style="background-color:orange";
+                    feedback.innerText = 'Medium: Add more complexity for a stronger password.';
+                    break;
+                case 5:
+                   
+                    strengthBar.style="background-color:green";
+                    feedback.innerText = 'Strong: Your password is strong!';
+                    break;
+                case 6:
+                    
+                    strengthBar.style="background-color:blue";
+                    feedback.innerText = 'Super Strong: Your password is excellent!';
+                    break;
+                default:
+                    strengthBar.className = '';
+                    feedback.innerText = 'Enter a password to check its strength.';
+                    break;
+            }
+        });
+    </script>
+</body>
+</html>

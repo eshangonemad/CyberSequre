@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anti-Scam Awareness Game</title>
+    <style>
+      
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans&display=swap');
+        body {
+            font-family: google sans;
+            align-items: center;
+            height: 100vh;
+            background-color: #0e1221;
+            margin: 0;
+        }
+        .game-container {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 450px;
+            text-align: center;
+          margin:5px;
+          box-sizing:border-box;
+        }
+        h1 {
+            color: #00796b;
+        }
+        .question {
+            font-size: 1.2em;
+            margin: 20px 0;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+        }
+        .option {
+            background-color: #ffca28;
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 5px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .option:hover {
+            background-color: #ffa000;
+        }
+        .result {
+            font-size: 1.1em;
+            margin: 20px 0;
+        }
+        .restart-btn, .next-btn {
+            background-color: #29b6f6;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        .restart-btn:hover, .next-btn:hover {
+            background-color: #0288d1;
+        }
+        .progress {
+            margin: 20px 0;
+            font-size: 1em;
+            color: #00796b;
+        }
+        .explanation {
+            font-size: 1em;
+            margin-top: 10px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+  
+  <div style="width:100%;padding:10px;box-sizing:border-box;background-color:#000000;border-radius:0 0 10px 10px;margin-bottom:20px;color:#ffffff;" onclick="window.open('/index.html','_self')"> <img src="https://cdn.glitch.global/df0b4a7c-1319-4c25-a69f-aaaeacc05be7/back%20(1).png?v=1723464891817" width="20px"> Back Home</div>
+    <div class="game-container">
+        <h1>Anti-Scam Awareness Game</h1>
+        <div class="progress"></div>
+        <div class="question-container">
+            <p class="question"></p>
+            <div class="options"></div>
+            <div class="explanation"></div>
+        </div>
+        <div class="result"></div>
+        <button class="next-btn" style="display: none;" onclick="nextQuestion()">Next Question</button>
+        <button class="restart-btn" onclick="restartGame()" style="display: none;">Restart Game</button>
+    </div>
+    <script>
+        const questions = [
+            {
+                question: 'You receive a call saying you won a prize. They ask for your credit card details. What do you do?',
+                options: [
+                    { text: 'Give details', correct: false, explanation: 'Never give out personal information to unknown callers.' },
+                    { text: 'Hang up', correct: true, explanation: 'Correct! It’s important to hang up and not share any personal details.' }
+                ]
+            },
+            {
+                question: 'You get an email saying you must reset your password immediately by clicking a link. What do you do?',
+                options: [
+                    { text: 'Click the link', correct: false, explanation: 'Don’t click on links in unexpected emails. This might be a phishing attempt.' },
+                    { text: 'Ignore the email and go to the official website to check', correct: true, explanation: 'Correct! It’s safer to visit the official website directly.' }
+                ]
+            },
+            {
+                question: 'A stranger asks for your home address online. What do you do?',
+                options: [
+                    { text: 'Give the address', correct: false, explanation: 'Never share personal details with strangers online.' },
+                    { text: 'Refuse and tell an adult', correct: true, explanation: 'Correct! Always protect your personal information and inform a trusted adult.' }
+                ]
+            },
+            {
+                question: 'You get a text message from an unknown number asking for your personal details. What do you do?',
+                options: [
+                    { text: 'Reply with your details', correct: false, explanation: 'Replying might expose you to scams. Never share personal details via text.' },
+                    { text: 'Ignore and delete the message', correct: true, explanation: 'Correct! Ignoring and deleting such messages is the safest choice.' }
+                ]
+            },
+            {
+                question: 'Someone online offers you a great deal on a popular item, but asks for your PayPal password. What do you do?',
+                options: [
+                    { text: 'Give the password', correct: false, explanation: 'Never share your passwords with anyone.' },
+                    { text: 'Refuse and report the person', correct: true, explanation: 'Correct! Report suspicious offers and never share your passwords.' }
+                ]
+            },
+            {
+                question: 'You get an email saying you owe money to the IRS and must pay immediately. What do you do?',
+                options: [
+                    { text: 'Pay immediately', correct: false, explanation: 'Scammers may impersonate authorities. Verify with the official IRS website first.' },
+                    { text: 'Ignore and check with the official IRS website', correct: true, explanation: 'Correct! Always verify such claims through official channels.' }
+                ]
+            },
+            {
+                question: 'You receive a message from a friend asking for your bank account number. What do you do?',
+                options: [
+                    { text: 'Give the bank account number', correct: false, explanation: 'Even if it seems like a friend, verify directly before sharing sensitive information.' },
+                    { text: 'Call your friend to verify', correct: true, explanation: 'Correct! Confirm with your friend directly before sharing any details.' }
+                ]
+            },
+            {
+                question: 'You see an ad offering a free gift if you provide your personal information. What do you do?',
+                options: [
+                    { text: 'Provide the information', correct: false, explanation: 'Ads offering free gifts in exchange for personal info are often scams.' },
+                    { text: 'Ignore the ad', correct: true, explanation: 'Correct! Avoid engaging with ads that ask for personal information.' }
+                ]
+            },
+            {
+                question: 'You get a call from someone claiming to be tech support and asking for remote access to your computer. What do you do?',
+                options: [
+                    { text: 'Allow access', correct: false, explanation: 'Never give remote access to unknown callers. It could be a scam.' },
+                    { text: 'Hang up and contact your tech support directly', correct: true, explanation: 'Correct! Contact your tech support directly if you need assistance.' }
+                ]
+            },
+            {
+                question: 'You receive an email saying you inherited money from a distant relative and need to provide your bank details. What do you do?',
+                options: [
+                    { text: 'Provide bank details', correct: false, explanation: 'Scammers often use fake inheritance schemes. Never share your bank details.' },
+                    { text: 'Ignore and delete the email', correct: true, explanation: 'Correct! Ignore and delete such emails as they are likely scams.' }
+                ]
+            },
+            {
+                question: 'You get a message on social media from someone offering to help you with a problem in exchange for a fee. What do you do?',
+                options: [
+                    { text: 'Pay the fee', correct: false, explanation: 'Be cautious of anyone offering help for money online. It could be a scam.' },
+                    { text: 'Ignore the message and report it', correct: true, explanation: 'Correct! Report suspicious messages and avoid paying fees to unknown individuals.' }
+                ]
+            }
+        ];
+        
+        let currentQuestionIndex = 0;
+
+        function startGame() {
+            currentQuestionIndex = 0;
+            document.querySelector('.result').textContent = '';
+            document.querySelector('.explanation').textContent = '';
+            document.querySelector('.next-btn').style.display = 'none';
+            document.querySelector('.restart-btn').style.display = 'none';
+            document.querySelector('.question-container').style.display = 'block';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = questions[currentQuestionIndex];
+            document.querySelector('.question').textContent = question.question;
+            const optionsDiv = document.querySelector('.options');
+            optionsDiv.innerHTML = '';
+            question.options.forEach(option => {
+                const button = document.createElement('button');
+                button.classList.add('option');
+                button.textContent = option.text;
+                button.onclick = () => checkAnswer(option);
+                optionsDiv.appendChild(button);
+            });
+            document.querySelector('.progress').textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+        }
+
+        function checkAnswer(option) {
+            const resultDiv = document.querySelector('.result');
+            const explanationDiv = document.querySelector('.explanation');
+            if (option.correct) {
+                resultDiv.textContent = 'Correct! Great job!';
+                resultDiv.style.color = 'green';
+            } else {
+                resultDiv.textContent = 'Incorrect. Be careful next time!';
+                resultDiv.style.color = 'red';
+            }
+            explanationDiv.textContent = option.explanation; // Show explanation
+            document.querySelector('.question-container').style.display = 'none';
+            if (currentQuestionIndex < questions.length - 1) {
+                document.querySelector('.next-btn').style.display = 'block';
+            } else {
+                document.querySelector('.restart-btn').style.display = 'block';
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            document.querySelector('.next-btn').style.display = 'none';
+            document.querySelector('.question-container').style.display = 'block';
+            document.querySelector('.result').textContent = '';
+            document.querySelector('.explanation').textContent = '';
+            showQuestion();
+        }
+
+        function restartGame() {
+            startGame();
+        }
+
+        startGame();
+    </script>
+</body>
+</html>

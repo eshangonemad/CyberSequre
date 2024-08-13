@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Manager</title>
+    <style>
+      
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans&display=swap');
+        body {
+            font-family: google sans;
+            background: #0e1221;
+            color: #d4d4d4;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #2c2c2c;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+          box-sizing:border-box;
+          position:relative;
+            
+            width: 100%;
+          
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #00aaff;
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+            color: #d4d4d4;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #555;
+            border-radius: 5px;
+            background-color: #333;
+            color: #d4d4d4;
+          box-sizing:border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #00aaff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #007b99;
+        }
+        .password-list {
+            margin-top: 20px;
+        }
+        .password-item {
+            background: #3c3c3c;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .password-item img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 3px;
+        }
+        .password-item span {
+            font-family: 'Courier New', Courier, monospace;
+            cursor: pointer;
+            color: #d4d4d4;
+        }
+        .show-password {
+            color: #00aaff;
+            cursor: pointer;
+        }
+        .show-password:hover {
+            text-decoration: underline;
+        }
+        .tooltip {
+            position: absolute;
+            background-color: #333;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            top: -40px;
+            right: 20px;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .tooltip.visible {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+  <div style="width:100%;padding:10px;box-sizing:border-box;background-color:#000000;border-radius:0 0 10px 10px;margin-bottom:20px;color:#ffffff;" onclick="window.open('/index.html','_self')"> <img src="https://cdn.glitch.global/df0b4a7c-1319-4c25-a69f-aaaeacc05be7/back%20(1).png?v=1723464891817" width="20px"> Back Home</div>
+  <div class="container">
+        <h1>CyberSequre Manager</h1>
+        <label for="website">Website URL (optional):</label>
+        <input type="text" id="website" placeholder="example.com">
+        <label for="username">Username:</label>
+        <input type="text" id="username" placeholder="Enter username">
+        <label for="password">Password:</label>
+        <input type="password" id="password" placeholder="Enter password">
+        <button id="saveBtn">Save Password</button>
+
+        <div class="password-list" id="passwordList"></div>
+        <div class="tooltip" id="tooltip">Copied!</div>
+    </div>
+
+    <script>
+        function encrypt(text, key) {
+            return btoa(text.split('').map(char => String.fromCharCode(char.charCodeAt(0) + key)).join(''));
+        }
+
+        function decrypt(text, key) {
+            return atob(text).split('').map(char => String.fromCharCode(char.charCodeAt(0) - key)).join('');
+        }
+        const encryptionKey = 5;
+
+        const websiteInput = document.getElementById('website');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const saveBtn = document.getElementById('saveBtn');
+        const passwordList = document.getElementById('passwordList');
+        const tooltip = document.getElementById('tooltip');
+
+        function loadPasswords() {
+            passwordList.innerHTML = '';
+            const storedPasswords = JSON.parse(localStorage.getItem('passwords')) || [];
+
+            storedPasswords.forEach((item, index) => {
+                const decryptedPassword = decrypt(item.password, encryptionKey);
+                const passwordItem = document.createElement('div');
+                passwordItem.className = 'password-item';
+
+                const formattedWebsite = item.website.startsWith('http') ? item.website : `https://${item.website}`;
+                const faviconUrl = item.website ? `https://www.google.com/s2/favicons?sz=64&domain=${formattedWebsite}` : 'default-favicon.png';
+
+                passwordItem.innerHTML = `
+                    <img src="${faviconUrl}" alt="Favicon">
+                    <span class="username" data-index="${index}">${item.username}</span>
+                    <span>
+                        <span class="password-text" data-index="${index}">********</span>
+                        <span class="show-password" data-index="${index}">Show</span>
+                    </span>
+                `;
+                passwordList.appendChild(passwordItem);
+            });
+        }
+
+        saveBtn.addEventListener('click', () => {
+            const website = websiteInput.value.trim();
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (username && password) {
+                const encryptedPassword = encrypt(password, encryptionKey);
+                const storedPasswords = JSON.parse(localStorage.getItem('passwords')) || [];
+                storedPasswords.push({ website, username, password: encryptedPassword });
+                localStorage.setItem('passwords', JSON.stringify(storedPasswords));
+                loadPasswords();
+                websiteInput.value = '';
+                usernameInput.value = '';
+                passwordInput.value = '';
+            } else {
+                alert('Please fill in the username and password fields');
+            }
+        });
+
+        passwordList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('show-password')) {
+                const index = e.target.dataset.index;
+                const passwordText = document.querySelector(`.password-text[data-index="${index}"]`);
+                const storedPasswords = JSON.parse(localStorage.getItem('passwords'));
+                const decryptedPassword = decrypt(storedPasswords[index].password, encryptionKey);
+
+                if (passwordText.textContent === '********') {
+                    passwordText.textContent = decryptedPassword;
+                    e.target.textContent = 'Hide';
+                } else {
+                    passwordText.textContent = '********';
+                    e.target.textContent = 'Show';
+                }
+            }
+        });
+
+        passwordList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('username')) {
+                const username = e.target.textContent;
+                navigator.clipboard.writeText(username).then(() => {
+                    tooltip.classList.add('visible');
+                    setTimeout(() => {
+                        tooltip.classList.remove('visible');
+                    }, 1500);
+                });
+            }
+        });
+        loadPasswords();
+    </script>
+</body>
+</html>
