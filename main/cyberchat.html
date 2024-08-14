@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breach Check</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Google+Sans&display=swap');
+        body {
+            font-family: google sans;
+            background-color: #0e1221;
+            color: #eee;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #444;
+            padding: 20px;
+            width: 85%;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            margin: 10px 0;
+            border: 1px solid #555;
+            border-radius: 5px;
+            background-color: #222;
+            color: #eee;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4caf50;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .result {
+            margin-top: 20px;
+            background-color: #222;
+            padding: 15px;
+            border-radius: 5px;
+            box-sizing: border-box;
+            border: 1px solid #555;
+            display: none;
+        }
+
+        .result.red-text {
+            color: #ff4c4c;
+        }
+
+        .result h2 {
+            margin: 0;
+        }
+
+        .result p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+  
+  <div style="width:100%;padding:10px;box-sizing:border-box;background-color:#000000;border-radius:0 0 10px 10px;margin-bottom:20px;color:#ffffff;" onclick="window.open('/index.html','_self')"> <img src="https://cdn.glitch.global/df0b4a7c-1319-4c25-a69f-aaaeacc05be7/back%20(1).png?v=1723464891817" width="20px"> Back Home</div>
+  <div style="display:flex;justify-content: center;align-items: center;vertical-align:middle;">
+  
+    <div class="container">
+        <h1 style="color:#00aaff;">Email Breach Check</h1>
+        <input type="email" id="emailInput" placeholder="Enter your email" />
+        <button onclick="checkBreach()">Check Breach</button>
+        
+        <div class="result" id="result">
+            <h2 id="status">No Data Found</h2>
+            <p id="email"></p>
+            <p id="sources"></p>
+        </div>
+    </div>
+
+  </div>
+    <script>
+        async function checkBreach() {
+            const email = document.getElementById('emailInput').value;
+            const url = `https://breachdirectory.p.rapidapi.com/?func=auto&term=${encodeURIComponent(email)}`;
+            const options = {
+                method: 'GET',
+                headers: {
+                    'x-rapidapi-key': '0cfe0e8bbamsh3f29d9cca35b190p1ce574jsn87b166b388c7',
+                    'x-rapidapi-host': 'breachdirectory.p.rapidapi.com'
+                }
+            };
+
+            try {
+                const response = await fetch(url, options);
+                const result = await response.json();
+                
+                const resultDiv = document.getElementById('result');
+                const statusElement = document.getElementById('status');
+                const emailElement = document.getElementById('email');
+                const sourcesElement = document.getElementById('sources');
+
+                if (result.success && result.found) {
+                    resultDiv.style.display = 'block';
+                    resultDiv.classList.add('red-text');
+                    statusElement.textContent = 'Data Breach Found';
+                    emailElement.textContent = `Email: ${result.result[0].email}`;
+                    sourcesElement.textContent = `Sources: ${result.result[0].sources}`;
+                } else {
+                    resultDiv.style.display = 'block';
+                    resultDiv.classList.remove('red-text');
+                    statusElement.textContent = 'No Data Breach Found';
+                    emailElement.textContent = '';
+                    sourcesElement.textContent = '';
+                }
+            } catch (error) {
+                console.error(error);
+                document.getElementById('status').textContent = 'Error Fetching Data';
+            }
+        }
+    </script>
+</body>
+</html>
