@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anti-Scam Awareness Game</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Google+Sans&display=swap');
+      
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans&display=swap');
         body {
-            font-family: 'Google Sans', sans-serif;
-            display: flex;
-            justify-content: center;
+            font-family: google sans;
             align-items: center;
             height: 100vh;
             background-color: #0e1221;
@@ -22,9 +21,8 @@
             padding: 20px;
             max-width: 450px;
             text-align: center;
-            margin: 5px;
-            box-sizing: border-box;
-            width: 100%;
+          margin:5px;
+          box-sizing:border-box;
         }
         h1 {
             color: #00796b;
@@ -77,15 +75,11 @@
             margin-top: 10px;
             color: #555;
         }
-        .game-over {
-            font-size: 1.5em;
-            color: #00796b;
-            margin-top: 20px;
-        }
     </style>
 </head>
 <body>
   
+  <div style="width:100%;padding:10px;box-sizing:border-box;background-color:#000000;border-radius:0 0 10px 10px;margin-bottom:20px;color:#ffffff;" onclick="window.open('/index.html','_self')"> <img src="https://cdn.glitch.global/df0b4a7c-1319-4c25-a69f-aaaeacc05be7/back%20(1).png?v=1723464891817" width="20px"> Back Home</div>
     <div class="game-container">
         <h1>Anti-Scam Awareness Game</h1>
         <div class="progress"></div>
@@ -99,7 +93,7 @@
         <button class="restart-btn" onclick="restartGame()" style="display: none;">Restart Game</button>
     </div>
     <script>
-const questions = [
+        const questions = [
             {
                 question: 'You receive a call saying you won a prize. They ask for your credit card details. What do you do?',
                 options: [
@@ -180,11 +174,9 @@ const questions = [
         ];
         
         let currentQuestionIndex = 0;
-        let score = 0;
 
         function startGame() {
             currentQuestionIndex = 0;
-            score = 0;
             document.querySelector('.result').textContent = '';
             document.querySelector('.explanation').textContent = '';
             document.querySelector('.next-btn').style.display = 'none';
@@ -214,17 +206,16 @@ const questions = [
             if (option.correct) {
                 resultDiv.textContent = 'Correct! Great job!';
                 resultDiv.style.color = 'green';
-                score++;
             } else {
                 resultDiv.textContent = 'Incorrect. Be careful next time!';
                 resultDiv.style.color = 'red';
             }
-            explanationDiv.textContent = option.explanation; 
+            explanationDiv.textContent = option.explanation; // Show explanation
             document.querySelector('.question-container').style.display = 'none';
             if (currentQuestionIndex < questions.length - 1) {
                 document.querySelector('.next-btn').style.display = 'block';
             } else {
-                gameOver();
+                document.querySelector('.restart-btn').style.display = 'block';
             }
         }
 
@@ -235,12 +226,6 @@ const questions = [
             document.querySelector('.result').textContent = '';
             document.querySelector('.explanation').textContent = '';
             showQuestion();
-        }
-
-        function gameOver() {
-            document.querySelector('.result').innerHTML = `Game Over! You scored ${score} out of ${questions.length}.`;
-            document.querySelector('.result').style.color = 'blue';
-            document.querySelector('.restart-btn').style.display = 'block';
         }
 
         function restartGame() {
